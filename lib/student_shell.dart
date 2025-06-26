@@ -49,13 +49,25 @@ class _StudentShellState extends State<StudentShell> {
         height: 60.0,
         backgroundColor: Colors.transparent,
         color: Colors.yellow[900]!,
-        buttonBackgroundColor: Theme.of(context).colorScheme.primary,
+        buttonBackgroundColor: Colors.white, // Selected icon button background
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 300),
-        items: const <Widget>[
-          Icon(Icons.dashboard, size: 30, color: Colors.white),
-          Icon(Icons.notifications, size: 30, color: Colors.white),
-          Icon(Icons.person, size: 30, color: Colors.white),
+        items: <Widget>[
+          Icon(
+            Icons.dashboard,
+            size: 30,
+            color: selectedIndex == 0 ? Colors.black : Colors.white,
+          ),
+          Icon(
+            Icons.notifications,
+            size: 30,
+            color: selectedIndex == 1 ? Colors.black : Colors.white,
+          ),
+          Icon(
+            Icons.person,
+            size: 30,
+            color: selectedIndex == 2 ? Colors.black : Colors.white,
+          ),
         ],
         onTap: (index) {
           setState(() {
@@ -263,13 +275,316 @@ class NotificationPage extends StatelessWidget {
   }
 }
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  bool arrivalNotifications = true;
+  bool delayAlerts = true;
+  bool generalUpdates = false;
+
+  String name = 'Krupa';
+  String studentId = '22MH1A4922';
+  String email = 'krup@gmail.com';
+  String phone = '+91 9876543210';
+
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Profile', style: Theme.of(context).textTheme.headlineMedium),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Column(
+                children: [
+                  const CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.orange,
+                    child: Icon(Icons.person, size: 50, color: Colors.white),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    name,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'Student ID: $studentId',
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 25),
+
+            _sectionTitle("Contact Information"),
+            _infoTile("Phone", phone),
+            _infoTile("Email", email),
+
+            const SizedBox(height: 20),
+
+            _sectionTitle("Bus Information"),
+            _infoTile("Bus Route", "Route 5 - College to Home"),
+            _infoTile("Bus Number", "DL 1A 2345"),
+            _infoTile("Stop Location", "Green Park - Bus Stop"),
+
+            const SizedBox(height: 20),
+
+            _sectionTitle("Notifications"),
+            _switchTile("Arrival Notifications", arrivalNotifications, (val) {
+              setState(() => arrivalNotifications = val);
+            }),
+            _switchTile("Delay Alerts", delayAlerts, (val) {
+              setState(() => delayAlerts = val);
+            }),
+            _switchTile("General Updates", generalUpdates, (val) {
+              setState(() => generalUpdates = val);
+            }),
+
+            const SizedBox(height: 20),
+
+            _sectionTitle("Emergency Contact"),
+            _infoTile("Parent Contact", "+91 9123456780"),
+
+            const SizedBox(height: 20),
+
+            _sectionTitle("Settings"),
+            ListTile(
+              leading: const Icon(Icons.lock, color: Colors.orange),
+              title: const Text(
+                "Change Password",
+                style: TextStyle(color: Colors.black),
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Colors.black,
+              ),
+              onTap: () {
+                // TODO: Implement change password
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.edit, color: Colors.orange),
+              title: const Text(
+                "Update Profile",
+                style: TextStyle(color: Colors.black),
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Colors.black,
+              ),
+              onTap: () async {
+                final updatedProfile = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditProfileScreen(
+                      name: name,
+                      email: email,
+                      phone: phone,
+                    ),
+                  ),
+                );
+
+                if (updatedProfile != null) {
+                  setState(() {
+                    name = updatedProfile['name'];
+                    email = updatedProfile['email'];
+                    phone = updatedProfile['phone'];
+                  });
+                }
+              },
+            ),
+
+            const SizedBox(height: 30),
+            Center(
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 12,
+                  ),
+                ),
+                onPressed: () {
+                  // TODO: Implement SOS action
+                },
+                icon: const Icon(Icons.warning, color: Colors.white),
+                label: const Text(
+                  "SOS",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _sectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.orange,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _infoTile(String label, String value) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(vertical: 2.0),
+      title: Text(
+        label,
+        style: const TextStyle(color: Colors.grey, fontSize: 14),
+      ),
+      subtitle: Text(
+        value,
+        style: const TextStyle(color: Colors.black, fontSize: 16),
+      ),
+    );
+  }
+
+  Widget _switchTile(String title, bool value, ValueChanged<bool> onChanged) {
+    return SwitchListTile(
+      activeColor: Colors.orange,
+      value: value,
+      onChanged: onChanged,
+      title: Text(title, style: const TextStyle(color: Colors.black)),
+    );
+  }
+}
+
+class EditProfileScreen extends StatefulWidget {
+  final String name;
+  final String email;
+  final String phone;
+
+  const EditProfileScreen({
+    super.key,
+    required this.name,
+    required this.email,
+    required this.phone,
+  });
+
+  @override
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
+}
+
+class _EditProfileScreenState extends State<EditProfileScreen> {
+  late TextEditingController nameController;
+  late TextEditingController emailController;
+  late TextEditingController phoneController;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController(text: widget.name);
+    emailController = TextEditingController(text: widget.email);
+    phoneController = TextEditingController(text: widget.phone);
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.orange,
+        title: const Text(
+          'Edit Profile',
+          style: TextStyle(color: Colors.white),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            _buildTextField("Name", nameController),
+            const SizedBox(height: 12),
+            _buildTextField("Email", emailController),
+            const SizedBox(height: 12),
+            _buildTextField(
+              "Phone",
+              phoneController,
+              keyboardType: TextInputType.phone,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context, {
+                  'name': nameController.text,
+                  'email': emailController.text,
+                  'phone': phoneController.text,
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 12,
+                ),
+              ),
+              child: const Text(
+                "Save Changes",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    TextInputType? keyboardType,
+  }) {
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      style: const TextStyle(color: Colors.black),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.orange),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.orange),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.orangeAccent),
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
     );
   }
 }
