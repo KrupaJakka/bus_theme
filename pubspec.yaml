@@ -40,6 +40,9 @@ dependencies:
   google_maps_flutter_ios: ^2.15.4
   google_maps_flutter: ^2.12.3
   flutter_svg: ^2.0.9
+  flutter_map:
+  latlong2:
+  curved_navigation_bar:
 
 
 dev_dependencies:
