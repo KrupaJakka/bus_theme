@@ -4,22 +4,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-void main() {
-  runApp(const SampleApp());
-}
-
-class SampleApp extends StatelessWidget {
-  const SampleApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const StudentShell(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
 class StudentShell extends StatefulWidget {
   const StudentShell({super.key});
 
@@ -39,17 +23,13 @@ class _StudentShellState extends State<StudentShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Student Dashboard"),
-        backgroundColor: const Color.fromARGB(255, 207, 186, 3),
-      ),
       body: IndexedStack(index: selectedIndex, children: pages),
       bottomNavigationBar: CurvedNavigationBar(
         index: selectedIndex,
         height: 60.0,
         backgroundColor: Colors.transparent,
-        color: Colors.yellow[900]!,
-        buttonBackgroundColor: Colors.white, // Selected icon button background
+        color: Color(0xFFFECF4C)!,
+        buttonBackgroundColor: Colors.transparent,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 300),
         items: <Widget>[
@@ -145,11 +125,14 @@ class _StudentHomeState extends State<StudentHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Student Dashboard"),
+        backgroundColor: const Color(0xFFFECF4C),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            // Map Container
             Container(
               height: 430,
               width: double.infinity,
@@ -192,10 +175,7 @@ class _StudentHomeState extends State<StudentHome> {
                 ],
               ),
             ),
-
             const SizedBox(height: 10),
-
-            // Driver Details with WhatsApp-style profile pic
             Container(
               height: 130,
               width: double.infinity,
@@ -224,13 +204,42 @@ class _StudentHomeState extends State<StudentHome> {
                                 selectedDriver!['name'],
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontSize: 12,
                                 ),
                               ),
-                              Text('ID: ${selectedDriver!['driver_id']}'),
-                              Text('Exp: ${selectedDriver!['experience']}'),
-                              Text('Phone: ${selectedDriver!['phone']}'),
-                              Text('Route: ${selectedDriver!['route_id']}'),
+                              Text(
+                                'ID: ${selectedDriver!['driver_id']}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Text(
+                                'Exp: ${selectedDriver!['experience']}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Text(
+                                'Phone: ${selectedDriver!['phone']}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Text(
+                                'Route: ${selectedDriver!['route_id']}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -243,8 +252,6 @@ class _StudentHomeState extends State<StudentHome> {
           ],
         ),
       ),
-
-      // Floating Action Button (Call Button)
       floatingActionButton: selectedDriver != null
           ? FloatingActionButton.extended(
               onPressed: () => _openDialer(selectedDriver!['phone']),
@@ -266,10 +273,16 @@ class NotificationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        'Notifications',
-        style: Theme.of(context).textTheme.headlineMedium,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Notifications'),
+        backgroundColor: const Color(0xFFFECF4C),
+      ),
+      body: Center(
+        child: Text(
+          'Notifications',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
       ),
     );
   }
@@ -295,6 +308,10 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Profile'),
+        backgroundColor: const Color(0xFFFECF4C),
+      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -326,38 +343,35 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             const SizedBox(height: 25),
-
             _sectionTitle("Contact Information"),
             _infoTile("Phone", phone),
             _infoTile("Email", email),
-
             const SizedBox(height: 20),
-
             _sectionTitle("Bus Information"),
             _infoTile("Bus Route", "Route 5 - College to Home"),
             _infoTile("Bus Number", "DL 1A 2345"),
             _infoTile("Stop Location", "Green Park - Bus Stop"),
-
             const SizedBox(height: 20),
-
             _sectionTitle("Notifications"),
-            _switchTile("Arrival Notifications", arrivalNotifications, (val) {
-              setState(() => arrivalNotifications = val);
-            }),
-            _switchTile("Delay Alerts", delayAlerts, (val) {
-              setState(() => delayAlerts = val);
-            }),
-            _switchTile("General Updates", generalUpdates, (val) {
-              setState(() => generalUpdates = val);
-            }),
-
+            _switchTile(
+              "Arrival Notifications",
+              arrivalNotifications,
+              (val) => setState(() => arrivalNotifications = val),
+            ),
+            _switchTile(
+              "Delay Alerts",
+              delayAlerts,
+              (val) => setState(() => delayAlerts = val),
+            ),
+            _switchTile(
+              "General Updates",
+              generalUpdates,
+              (val) => setState(() => generalUpdates = val),
+            ),
             const SizedBox(height: 20),
-
             _sectionTitle("Emergency Contact"),
             _infoTile("Parent Contact", "+91 9123456780"),
-
             const SizedBox(height: 20),
-
             _sectionTitle("Settings"),
             ListTile(
               leading: const Icon(Icons.lock, color: Colors.orange),
@@ -396,7 +410,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 );
-
                 if (updatedProfile != null) {
                   setState(() {
                     name = updatedProfile['name'];
@@ -406,7 +419,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 }
               },
             ),
-
             const SizedBox(height: 30),
             Center(
               child: ElevatedButton.icon(
@@ -515,7 +527,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.orange,
         title: const Text(
@@ -547,7 +558,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 });
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
+                backgroundColor: Color(0xFFFECF4C),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
                   vertical: 12,

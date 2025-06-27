@@ -1,63 +1,203 @@
-import 'package:bus_theme/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:bus_theme/Adminshell.dart';
+import 'package:bus_theme/drivershell.dart';
+import 'package:bus_theme/parent_shell.dart';
+import 'package:bus_theme/student_shell.dart';
 
-class RoleSelectionScreen extends StatelessWidget {
-  const RoleSelectionScreen({super.key});
+void main() {
+  runApp(const RoleSelectionApp());
+}
+
+class RoleSelectionApp extends StatelessWidget {
+  const RoleSelectionApp({super.key});
+
   @override
-  Widget build(BuildContext c) {
-    final items = [
-      ('Student', Routes.student, Icons.school),
-      ('Parent', Routes.parent, Icons.family_restroom),
-      ('Driver', Routes.driver, Icons.bus_alert),
-      ('Admin', Routes.admin, Icons.admin_panel_settings),
-    ];
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: const RoleSelectionScreen(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class RoleSelectionScreen extends StatefulWidget {
+  const RoleSelectionScreen({super.key});
+
+  @override
+  State<RoleSelectionScreen> createState() => _RoleSelectionScreenState();
+}
+
+class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
+  String selectedRole = '';
+
+  void selectRole(String role) {
+    setState(() {
+      selectedRole = role;
+    });
+
+    // Navigate to the correct screen based on role
+    switch (role) {
+      case 'Driver':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const DriverShell()),
+        );
+        break;
+      case 'Parent':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ParentShell()),
+        );
+        break;
+      case 'Student':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const StudentShell()),
+        );
+        break;
+      case 'Admin':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AdminShell()),
+        );
+        break;
+      default:
+        break;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Choose Role'),
-        leading: BackButton(onPressed: () => Navigator.pop(c)),
-      ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        padding: const EdgeInsets.all(24),
-        mainAxisSpacing: 20,
-        crossAxisSpacing: 20,
-        childAspectRatio: .9,
-        children: items
-            .map((e) => _RoleCard(label: e.$1, route: e.$2, icon: e.$3))
-            .toList(),
+      body: Row(
+        children: [
+          // Left Section: Role Selection
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: const Color(0xFFFECF4C),
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Choose your ROLE',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+
+                  RoleOption(
+                    icon: Icons.directions_bus,
+                    title: 'Driver',
+                    selected: selectedRole == 'Driver',
+                    onTap: () => selectRole('Driver'),
+                  ),
+                  const SizedBox(height: 16),
+
+                  RoleOption(
+                    icon: Icons.people_alt,
+                    title: 'Parent',
+                    selected: selectedRole == 'Parent',
+                    onTap: () => selectRole('Parent'),
+                  ),
+                  const SizedBox(height: 16),
+
+                  RoleOption(
+                    icon: Icons.school,
+                    title: 'Student',
+                    selected: selectedRole == 'Student',
+                    onTap: () => selectRole('Student'),
+                  ),
+                  const SizedBox(height: 16),
+
+                  RoleOption(
+                    icon: Icons.badge,
+                    title: 'Admin',
+                    selected: selectedRole == 'Admin',
+                    onTap: () => selectRole('Admin'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          Expanded(
+            flex: 1,
+            child: Container(
+              width: 300,
+              height: 900,
+              child: RotatedBox(
+                quarterTurns: 3,
+                child: Image.network(
+                  'https://img.pikbest.com/png-images/qiantu/original-vector-school-bus-elements_2729606.png!sw800',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _RoleCard extends StatelessWidget {
-  final String label, route;
+class RoleOption extends StatelessWidget {
   final IconData icon;
-  const _RoleCard({
-    required this.label,
-    required this.route,
+  final String title;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const RoleOption({
+    super.key,
     required this.icon,
+    required this.title,
+    required this.selected,
+    required this.onTap,
   });
+
   @override
-  Widget build(BuildContext c) => InkWell(
-    onTap: () => Navigator.pushReplacementNamed(c, route),
-    borderRadius: BorderRadius.circular(16),
-    child: Ink(
-      decoration: BoxDecoration(
-        color: Colors.grey[850],
-        borderRadius: BorderRadius.circular(16),
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 180,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        decoration: BoxDecoration(
+          color: selected ? const Color(0xFFFCE7A0) : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(icon, size: 36, color: Colors.black),
+            const SizedBox(height: 12),
+            const Text(
+              'Continue as',
+              style: TextStyle(fontSize: 14, color: Colors.black),
+            ),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 48, color: Theme.of(c).colorScheme.primary),
-          const SizedBox(height: 12),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-        ],
-      ),
-    ),
-  );
+    );
+  }
 }

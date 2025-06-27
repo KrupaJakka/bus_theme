@@ -43,6 +43,8 @@ dependencies:
   flutter_map:
   latlong2:
   curved_navigation_bar:
+  device_preview:
+  lottie: ^2.7.0
 
 
 dev_dependencies:
@@ -71,6 +73,8 @@ flutter:
   assets:
     - assets/route_active.svg
     - assets/route_idle.svg
+    - assets/bus_idle.json
+    - assets/bus_running.json
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
