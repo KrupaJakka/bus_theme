@@ -1,5 +1,4 @@
 import 'package:bus_theme/role_selection.dart';
-import 'package:bus_theme/role_selection.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingScreen extends StatefulWidget {
