@@ -1,4 +1,3 @@
-import 'package:bus_theme/map_holder.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -62,7 +61,7 @@ class ParentTrackPage extends StatelessWidget {
               ),
               child: const Padding(
                 padding: EdgeInsets.all(12),
-                child: MapPlaceholder(),
+                // child: MapPlaceholder(),
               ),
             ),
           ),

@@ -1,3 +1,4 @@
+import 'package:bus_theme/admin_dashboard.dart';
 import 'package:flutter/material.dart';
 
 class AdminShell extends StatefulWidget {
@@ -8,12 +9,7 @@ class AdminShell extends StatefulWidget {
 
 class _AdminShellState extends State<AdminShell> {
   int _index = 0;
-  final _pages = const [
-    AdminDashboard(),
-    BusListPage(),
-    DriverListPage(),
-    AnalyticsPage(),
-  ];
+  final _pages = const [AdminDashboard(), Admin(), AnalyticsPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +29,8 @@ class _AdminShellState extends State<AdminShell> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.directions_bus),
-            label: 'Buses',
+            label: 'Details',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Drivers'),
           BottomNavigationBarItem(
             icon: Icon(Icons.analytics),
             label: 'Analytics',
@@ -52,56 +47,6 @@ class AdminDashboard extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(title: const Text('Admin Overview')),
     body: const Center(child: Text('Bus stats, active routes, alerts etc.')),
-  );
-}
-
-class BusListPage extends StatelessWidget {
-  const BusListPage({super.key});
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Manage Buses')),
-    floatingActionButton: FloatingActionButton(
-      onPressed: () {},
-      child: const Icon(Icons.add),
-    ),
-    body: ListView(
-      padding: const EdgeInsets.all(16),
-      children: const [
-        ListTile(
-          leading: Icon(Icons.directions_bus),
-          title: Text('Bus A-1'),
-          subtitle: Text('Route A'),
-        ),
-        ListTile(
-          leading: Icon(Icons.directions_bus),
-          title: Text('Bus B-2'),
-          subtitle: Text('Route B'),
-        ),
-      ],
-    ),
-  );
-}
-
-class DriverListPage extends StatelessWidget {
-  const DriverListPage({super.key});
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Manage Drivers')),
-    body: ListView(
-      padding: const EdgeInsets.all(16),
-      children: const [
-        ListTile(
-          leading: Icon(Icons.person),
-          title: Text('John Doe'),
-          subtitle: Text('Bus A-1'),
-        ),
-        ListTile(
-          leading: Icon(Icons.person),
-          title: Text('Priya S.'),
-          subtitle: Text('Bus B-2'),
-        ),
-      ],
-    ),
   );
 }
 

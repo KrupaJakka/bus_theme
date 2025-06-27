@@ -45,6 +45,7 @@ dependencies:
   curved_navigation_bar:
   device_preview:
   lottie: ^2.7.0
+  image_picker:
 
 
 dev_dependencies:
@@ -71,10 +72,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/route_active.svg
-    - assets/route_idle.svg
-    - assets/bus_idle.json
-    - assets/bus_running.json
+    - assets/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

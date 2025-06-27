@@ -1,5 +1,22 @@
 import 'package:bus_theme/role_selection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: OnboardingScreen(),
+    );
+  }
+}
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -9,28 +26,28 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final _pc = PageController();
-  int _idx = 0;
+  final PageController _pageController = PageController();
+  int currentIndex = 0;
 
-  final _cards = const [
-    _Card(
-      icon: Icons.directions_bus_filled,
-      title: 'Real‑time Tracking',
-      desc: 'Locate buses and see ETA.',
-    ),
-    _Card(
-      icon: Icons.shield_moon,
-      title: 'Safety Alerts',
-      desc: 'Parents & students receive notifications.',
-    ),
-    _Card(
-      icon: Icons.speed,
-      title: 'Driver Friendly',
-      desc: 'Easy to share location & routes.',
-    ),
+  final List<Map<String, String>> onboardingData = [
+    {
+      'image': 'assets/city_bus-cuate.svg',
+      'title': 'Track Your Bus Live',
+      'desc': 'Get real-time location updates of your college bus.',
+    },
+    {
+      'image': 'assets/Navigation-pana.svg',
+      'title': 'Stay Informed',
+      'desc': 'Receive alerts when the bus reaches your stop.',
+    },
+    {
+      'image': 'assets/Paper_map-cuate.svg',
+      'title': 'Connect Effortlessly',
+      'desc': 'Students and parents stay connected and secure.',
+    },
   ];
 
-  void goToRoleSelection() {
+  void navigateToRoleSelection() {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const RoleSelectionApp()),
@@ -40,56 +57,70 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFECF4C),
       body: Stack(
         children: [
-          // Page View (Slides)
-          PageView(
-            controller: _pc,
-            onPageChanged: (i) => setState(() => _idx = i),
-            children: _cards,
+          Column(
+            children: [
+              Expanded(
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: onboardingData.length,
+                  onPageChanged: (index) =>
+                      setState(() => currentIndex = index),
+                  itemBuilder: (context, index) => OnboardContent(
+                    image: onboardingData[index]['image']!,
+                    title: onboardingData[index]['title']!,
+                    description: onboardingData[index]['desc']!,
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  onboardingData.length,
+                  (index) => buildDot(index),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Both Next and Get Started buttons look the same now
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                onPressed: currentIndex == 2
+                    ? navigateToRoleSelection
+                    : () {
+                        _pageController.nextPage(
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.ease,
+                        );
+                      },
+                child: Text(currentIndex == 2 ? 'Get Started' : 'Next'),
+              ),
+
+              const SizedBox(height: 40),
+            ],
           ),
 
-          // Skip Button (Top-right)
+          // Skip Button at top-right
           Positioned(
             top: 40,
             right: 20,
             child: TextButton(
-              onPressed: goToRoleSelection,
+              onPressed: navigateToRoleSelection,
               child: const Text(
                 'Skip',
-                style: TextStyle(fontSize: 16, color: Color(0xFFFECF4C)),
-              ),
-            ),
-          ),
-
-          // Bottom Button (Next or Start)
-          Positioned(
-            right: 20,
-            bottom: 40,
-            child: FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: Color(0xFFFECF4C),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              onPressed: () {
-                if (_idx < _cards.length - 1) {
-                  _pc.nextPage(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOut,
-                  );
-                } else {
-                  goToRoleSelection();
-                }
-              },
-              child: Text(
-                _idx == _cards.length - 1 ? 'Start' : 'Next',
-                style: const TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.black, fontSize: 16),
               ),
             ),
           ),
@@ -97,42 +128,56 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
     );
   }
+
+  Widget buildDot(int index) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      margin: const EdgeInsets.symmetric(horizontal: 6),
+      height: 10,
+      width: currentIndex == index ? 22 : 10,
+      decoration: BoxDecoration(
+        color: currentIndex == index ? Colors.black : Colors.grey.shade600,
+        borderRadius: BorderRadius.circular(5),
+      ),
+    );
+  }
 }
 
-class _Card extends StatelessWidget {
-  const _Card({required this.icon, required this.title, required this.desc});
+class OnboardContent extends StatelessWidget {
+  final String image, title, description;
 
-  final IconData icon;
-  final String title;
-  final String desc;
+  const OnboardContent({
+    super.key,
+    required this.image,
+    required this.title,
+    required this.description,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 96,
-              color: Theme.of(context).colorScheme.secondary,
+    return Padding(
+      padding: const EdgeInsets.all(30.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(image, height: 250),
+          const SizedBox(height: 40),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
-            const SizedBox(height: 24),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              desc,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          ],
-        ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 15),
+          Text(
+            description,
+            style: const TextStyle(fontSize: 16, color: Colors.black87),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

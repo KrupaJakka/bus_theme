@@ -28,25 +28,25 @@ class _StudentShellState extends State<StudentShell> {
         index: selectedIndex,
         height: 60.0,
         backgroundColor: Colors.transparent,
-        color: Color(0xFFFECF4C)!,
-        buttonBackgroundColor: Colors.transparent,
+        color: Color(0xFFFECF4C),
+        buttonBackgroundColor: Color(0xFFFECF4C),
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 300),
         items: <Widget>[
           Icon(
             Icons.dashboard,
             size: 30,
-            color: selectedIndex == 0 ? Colors.black : Colors.white,
+            color: selectedIndex == 0 ? Colors.black : Colors.black,
           ),
           Icon(
             Icons.notifications,
             size: 30,
-            color: selectedIndex == 1 ? Colors.black : Colors.white,
+            color: selectedIndex == 1 ? Colors.black : Colors.black,
           ),
           Icon(
             Icons.person,
             size: 30,
-            color: selectedIndex == 2 ? Colors.black : Colors.white,
+            color: selectedIndex == 2 ? Colors.black : Colors.black,
           ),
         ],
         onTap: (index) {
@@ -305,12 +305,15 @@ class _ProfilePageState extends State<ProfilePage> {
   String email = 'krup@gmail.com';
   String phone = '+91 9876543210';
 
+  Color primaryColor = const Color(0xFFFECF4C);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
-        backgroundColor: const Color(0xFFFECF4C),
+        title: const Text('Profile', style: TextStyle(color: Colors.black)),
+        backgroundColor: primaryColor,
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -321,10 +324,14 @@ class _ProfilePageState extends State<ProfilePage> {
             Center(
               child: Column(
                 children: [
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 50,
-                    backgroundColor: Colors.orange,
-                    child: Icon(Icons.person, size: 50, color: Colors.white),
+                    backgroundColor: primaryColor,
+                    child: const Icon(
+                      Icons.person,
+                      size: 50,
+                      color: Colors.black,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   Text(
@@ -374,7 +381,7 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 20),
             _sectionTitle("Settings"),
             ListTile(
-              leading: const Icon(Icons.lock, color: Colors.orange),
+              leading: Icon(Icons.lock, color: primaryColor),
               title: const Text(
                 "Change Password",
                 style: TextStyle(color: Colors.black),
@@ -384,12 +391,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 size: 16,
                 color: Colors.black,
               ),
-              onTap: () {
-                // TODO: Implement change password
-              },
+              onTap: () {},
             ),
             ListTile(
-              leading: const Icon(Icons.edit, color: Colors.orange),
+              leading: Icon(Icons.edit, color: primaryColor),
               title: const Text(
                 "Update Profile",
                 style: TextStyle(color: Colors.black),
@@ -423,23 +428,18 @@ class _ProfilePageState extends State<ProfilePage> {
             Center(
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
+                  backgroundColor: primaryColor,
+                  foregroundColor: Colors.black,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,
                     vertical: 12,
                   ),
                 ),
-                onPressed: () {
-                  // TODO: Implement SOS action
-                },
-                icon: const Icon(Icons.warning, color: Colors.white),
+                onPressed: () {},
+                icon: const Icon(Icons.warning),
                 label: const Text(
                   "SOS",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -454,8 +454,8 @@ class _ProfilePageState extends State<ProfilePage> {
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(
         title,
-        style: const TextStyle(
-          color: Colors.orange,
+        style: TextStyle(
+          color: primaryColor,
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
@@ -479,7 +479,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _switchTile(String title, bool value, ValueChanged<bool> onChanged) {
     return SwitchListTile(
-      activeColor: Colors.orange,
+      activeColor: primaryColor,
       value: value,
       onChanged: onChanged,
       title: Text(title, style: const TextStyle(color: Colors.black)),
@@ -508,6 +508,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController emailController;
   late TextEditingController phoneController;
 
+  Color primaryColor = const Color(0xFFFECF4C);
+
   @override
   void initState() {
     super.initState();
@@ -528,12 +530,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.orange,
+        backgroundColor: primaryColor,
         title: const Text(
           'Edit Profile',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -558,7 +560,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 });
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFFECF4C),
+                backgroundColor: primaryColor,
+                foregroundColor: Colors.black,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
                   vertical: 12,
@@ -566,7 +569,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               child: const Text(
                 "Save Changes",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -586,13 +589,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: Colors.orange),
+        labelStyle: TextStyle(color: primaryColor),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.orange),
+          borderSide: BorderSide(color: primaryColor),
           borderRadius: BorderRadius.circular(12),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.orangeAccent),
+          borderSide: BorderSide(color: Colors.amber.shade700),
           borderRadius: BorderRadius.circular(12),
         ),
       ),
