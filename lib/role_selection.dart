@@ -131,13 +131,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
             child: Container(
               width: 300,
               height: 900,
-              child: RotatedBox(
-                quarterTurns: 3,
-                child: Image.network(
-                  'https://img.pikbest.com/png-images/qiantu/original-vector-school-bus-elements_2729606.png!sw800',
-                  fit: BoxFit.cover,
-                ),
-              ),
+              child: Image.asset("assets/b1.jpg", fit: BoxFit.fill),
             ),
           ),
         ],

@@ -11,7 +11,7 @@ class _ParentSettingsPageState extends State<ParentSettingsPage> {
   bool arrivalAlerts = true;
   bool delayAlerts = false;
   bool broadcastAlerts = true;
-  bool darkMode = true; // stub – would update theme via provider
+  bool darkMode = true; 
   String language = 'English';
 
   final _languages = ['English', 'Hindi', 'Tamil', 'Kannada'];

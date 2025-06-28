@@ -1,13 +1,12 @@
-import 'package:bus_theme/alertpage.dart';
-import 'package:bus_theme/parent_settings.dart';
-
 import 'package:flutter/material.dart';
-import 'package:bus_theme/parent_track_page.dart'; // <-- add this
-// NotificationPage
-// MapPlaceholder no longer needed
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:bus_theme/alertpage.dart';
+import 'package:bus_theme/parent_profile.dart';
+import 'package:bus_theme/parent_track_page.dart';
 
 class ParentShell extends StatefulWidget {
   const ParentShell({super.key});
+
   @override
   State<ParentShell> createState() => _ParentShellState();
 }
@@ -15,38 +14,34 @@ class ParentShell extends StatefulWidget {
 class _ParentShellState extends State<ParentShell> {
   int _index = 0;
 
-  // ▼ use final (not const) because the first page isn’t const-constructible
   final List<Widget> _pages = const [
-    ParentTrackPage(), // ← replaces MapPlaceholder()
+    ParentTrackPage(),
     ParentHomePage(),
     ParentSettingsPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    const Color yellow = Color(0xFFFECF4C);
+    const Color black = Colors.black;
+
     return Scaffold(
       body: IndexedStack(index: _index, children: _pages),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _index,
-        onTap: (i) => setState(() => _index = i),
-        backgroundColor: Colors.grey[900],
-        selectedItemColor: cs.primary,
-        unselectedItemColor: Colors.grey,
+      bottomNavigationBar: CurvedNavigationBar(
+        index: _index,
+        backgroundColor: Colors.transparent,
+        color: Color(0xFFFECF4C),
+        buttonBackgroundColor: yellow,
+        animationDuration: const Duration(milliseconds: 300),
+        height: 60,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.location_on),
-            label: 'Track',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Alerts',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
+          Icon(Icons.location_on, color: Colors.black),
+          Icon(Icons.notifications, color: Colors.black),
+          Icon(Icons.settings, color: Colors.black),
         ],
+        onTap: (i) {
+          setState(() => _index = i);
+        },
       ),
     );
   }

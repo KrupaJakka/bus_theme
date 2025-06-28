@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// Parent‑side live‑tracking page
-/// — tap map or FAB opens Google Maps at bus location
-/// — Call button opens native dialer with driver number pre‑filled
-/// — Stylish vertical route timeline
 class ParentTrackPage extends StatelessWidget {
   const ParentTrackPage({super.key});
 
-  // 🔧 Replace with real‑time coords & phone pulled from backend
   static const double _busLat = 12.9716;
   static const double _busLng = 77.5946;
 
-  /* Open Google Maps in external app */
+  static const Color yellow = Color(0xFFFECF4C);
+  static const Color black = Colors.black;
+
   Future<void> _openMap() async {
     final uri = Uri.parse(
       'https://www.google.com/maps/search/?api=1&query=$_busLat,$_busLng',
@@ -22,14 +21,10 @@ class ParentTrackPage extends StatelessWidget {
     }
   }
 
-  /* Bring up dial‑pad with driver number filled in */
   Future<void> _callDriver(BuildContext ctx) async {
-    final uri = Uri(scheme: 'tel', path: '+919876543210'); // no “tel://”
+    final uri = Uri(scheme: 'tel', path: '+919876543210');
     if (await canLaunchUrl(uri)) {
-      await launchUrl(
-        uri,
-        mode: LaunchMode.externalApplication,
-      ); // opens dial-pad
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       ScaffoldMessenger.of(
         ctx,
@@ -39,7 +34,6 @@ class ParentTrackPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
     final timeline = [
       ('Main Gate', 'Departed 8:15 AM', _PointState.past),
       ('Park Street', 'Current 8:25 AM', _PointState.current),
@@ -47,29 +41,94 @@ class ParentTrackPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Track My Child')),
+      appBar: AppBar(
+        backgroundColor: yellow,
+        foregroundColor: black,
+        title: const Text('Track My Child'),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // --- Map Card ---------------------------------------------------
-          GestureDetector(
-            onTap: _openMap,
-            child: Card(
-              color: Colors.grey[850],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(12),
-                // child: MapPlaceholder(),
+          // --- OpenStreetMap Widget -------------------------------------
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: yellow, width: 2),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: FlutterMap(
+                options: MapOptions(
+                  initialCenter: LatLng(_busLat, _busLng),
+                  initialZoom: 15,
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate:
+                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    userAgentPackageName: 'com.example.bus_theme',
+                  ),
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        width: 50,
+                        height: 50,
+                        point: LatLng(_busLat, _busLng),
+                        child: GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: const Text('Bus Location'),
+                                content: const Text(
+                                  'The bus is here on the map.',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.of(ctx).pop(),
+                                    child: const Text('Close'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: yellow,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 6,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.directions_bus,
+                              color: black,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
           const SizedBox(height: 24),
-          // --- Child & Bus Row -------------------------------------------
+
+          // --- Child & Bus Info ------------------------------------------
           Row(
             children: [
-              const CircleAvatar(radius: 28, child: Icon(Icons.school)),
+              const CircleAvatar(
+                radius: 28,
+                backgroundColor: yellow,
+                child: Icon(Icons.school, color: black),
+              ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -77,20 +136,24 @@ class ParentTrackPage extends StatelessWidget {
                   children: [
                     const Text(
                       'Child: Alex Johnson',
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 16, color: black),
                     ),
                     const Text(
                       'Bus: BUS‑45 (Route A‑1)',
                       style: TextStyle(color: Colors.grey),
                     ),
-                    Text(
-                      'ETA to stop: 5 min',
-                      style: TextStyle(color: cs.secondary),
+                    const Text(
+                      'ETA to stop: 5 min',
+                      style: TextStyle(color: black),
                     ),
                   ],
                 ),
               ),
-              FilledButton.icon(
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: yellow,
+                  foregroundColor: black,
+                ),
                 onPressed: () => _callDriver(context),
                 icon: const Icon(Icons.call),
                 label: const Text('Call'),
@@ -98,13 +161,21 @@ class ParentTrackPage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 24),
+
           // --- Timeline ----------------------------------------------------
-          Text('Route Timeline', style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            'Route Timeline',
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(color: black),
+          ),
           const SizedBox(height: 12),
           _VerticalTimeline(items: timeline),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: yellow,
+        foregroundColor: black,
         onPressed: _openMap,
         icon: const Icon(Icons.map),
         label: const Text('Open in Maps'),
@@ -113,7 +184,6 @@ class ParentTrackPage extends StatelessWidget {
   }
 }
 
-// =================== Vertical Timeline Component ===================
 enum _PointState { past, current, future }
 
 class _VerticalTimeline extends StatelessWidget {
@@ -122,17 +192,21 @@ class _VerticalTimeline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const yellow = Color(0xFFFECF4C);
+    const black = Colors.black;
+
     return Column(
       children: List.generate(items.length, (i) {
         final (title, subtitle, state) = items[i];
         final isLast = i == items.length - 1;
         Color dotColor;
+
         switch (state) {
           case _PointState.past:
             dotColor = Colors.green;
             break;
           case _PointState.current:
-            dotColor = Theme.of(context).colorScheme.primary;
+            dotColor = yellow;
             break;
           case _PointState.future:
             dotColor = Colors.grey;
@@ -170,7 +244,10 @@ class _VerticalTimeline extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: black,
+                    ),
                   ),
                   Text(subtitle, style: const TextStyle(color: Colors.grey)),
                 ],
