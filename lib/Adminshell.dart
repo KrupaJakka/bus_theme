@@ -52,9 +52,9 @@ class _AdminShellState extends State<AdminShell> {
         buttonBackgroundColor: const Color(0xFFFECF4C),
         animationDuration: const Duration(milliseconds: 300),
         items: const [
-          Icon(Icons.dashboard, color: Colors.black, size: 30),
+          Icon(Icons.home_rounded, color: Colors.black, size: 30),
           Icon(Icons.directions_bus, color: Colors.black, size: 30),
-          Icon(Icons.analytics, color: Colors.black, size: 30),
+          Icon(Icons.person_rounded, color: Colors.black, size: 30),
         ],
       ),
     );
@@ -234,14 +234,13 @@ class AdminProfileScreen extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: Colors.white, // Entire screen background is white
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Header section with Yellow background
           Container(
             height: size.height * 0.35,
             decoration: const BoxDecoration(
-              color: Color(0xFFFECF4C), // Primary yellow
+              color: Color(0xFFFECF4C),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(80),
                 bottomRight: Radius.circular(80),

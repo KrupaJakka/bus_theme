@@ -17,28 +17,41 @@ class _ParentSettingsPageState extends State<ParentSettingsPage> {
   String language = 'English';
 
   final _languages = ['English', 'Hindi', 'Tamil', 'Kannada'];
+
+  Color get primaryColor => const Color(0xFFFECF4C);
+  Color get secondaryColor => Colors.black;
+  Color get bgColor => Colors.white;
+
   Widget _section(String title) => Padding(
     padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
     child: Text(
       title,
-      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        color: secondaryColor,
+      ),
     ),
   );
 
   Future<void> _callDriver() async {
     const tel = 'tel:+919876543210';
-    if (await canLaunchUrl(Uri.parse(tel))) await launchUrl(Uri.parse(tel));
+    if (await canLaunchUrl(Uri.parse(tel))) {
+      await launchUrl(Uri.parse(tel));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
     return Scaffold(
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: const Text('Settings'),
+        backgroundColor: primaryColor,
+        title: Text('Settings', style: TextStyle(color: secondaryColor)),
+        iconTheme: IconThemeData(color: secondaryColor),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: Icon(Icons.logout, color: secondaryColor),
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
               Navigator.pushReplacement(
@@ -51,37 +64,71 @@ class _ParentSettingsPageState extends State<ParentSettingsPage> {
       ),
       body: ListView(
         children: [
-          _section('Account'),
-          ListTile(
-            leading: const CircleAvatar(child: Icon(Icons.person)),
-            title: const Text('Alex Johnson'),
-            subtitle: const Text('alex.parent@example.com'),
-            trailing: TextButton(onPressed: () {}, child: const Text('Edit')),
+          const SizedBox(height: 24),
+          Center(
+            child: CircleAvatar(
+              radius: 48,
+              backgroundColor: primaryColor,
+              child: Text(
+                'AJ', // Initials for Alex Johnson
+                style: TextStyle(
+                  color: bgColor,
+                  fontSize: 36,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Center(
+            child: Text(
+              'Alex Johnson',
+              style: TextStyle(
+                color: secondaryColor,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Center(
+            child: Text(
+              'ID: P1234567',
+              style: TextStyle(
+                color: secondaryColor.withOpacity(0.7),
+                fontSize: 14,
+              ),
+            ),
           ),
           _section('Preferences'),
           SwitchListTile.adaptive(
             value: darkMode,
             onChanged: (v) => setState(() => darkMode = v),
-            title: const Text('Dark Mode'),
-            secondary: Icon(Icons.dark_mode, color: cs.secondary),
+            title: Text('Dark Mode', style: TextStyle(color: secondaryColor)),
+            secondary: Icon(Icons.dark_mode, color: primaryColor),
           ),
           ListTile(
-            leading: Icon(Icons.language, color: cs.secondary),
-            title: const Text('Language'),
-            subtitle: Text(language),
-            trailing: const Icon(Icons.chevron_right),
+            leading: Icon(Icons.language, color: primaryColor),
+            title: Text('Language', style: TextStyle(color: secondaryColor)),
+            subtitle: Text(language, style: TextStyle(color: secondaryColor)),
+            trailing: Icon(Icons.chevron_right, color: secondaryColor),
             onTap: () async {
               final sel = await showModalBottomSheet<String>(
                 context: context,
-                builder: (ctx) => ListView(
-                  children: _languages
-                      .map(
-                        (lang) => ListTile(
-                          title: Text(lang),
-                          onTap: () => Navigator.pop(ctx, lang),
-                        ),
-                      )
-                      .toList(),
+                builder: (ctx) => Container(
+                  color: bgColor,
+                  child: ListView(
+                    children: _languages
+                        .map(
+                          (lang) => ListTile(
+                            title: Text(
+                              lang,
+                              style: TextStyle(color: secondaryColor),
+                            ),
+                            onTap: () => Navigator.pop(ctx, lang),
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
               );
               if (sel != null) setState(() => language = sel);
@@ -91,42 +138,61 @@ class _ParentSettingsPageState extends State<ParentSettingsPage> {
           SwitchListTile.adaptive(
             value: arrivalAlerts,
             onChanged: (v) => setState(() => arrivalAlerts = v),
-            title: const Text('Bus Arrival Alerts'),
-            secondary: Icon(Icons.directions_bus, color: cs.secondary),
+            title: Text(
+              'Bus Arrival Alerts',
+              style: TextStyle(color: secondaryColor),
+            ),
+            secondary: Icon(Icons.directions_bus, color: primaryColor),
           ),
           SwitchListTile.adaptive(
             value: delayAlerts,
             onChanged: (v) => setState(() => delayAlerts = v),
-            title: const Text('Delay Notifications'),
-            secondary: Icon(Icons.access_time, color: cs.secondary),
+            title: Text(
+              'Delay Notifications',
+              style: TextStyle(color: secondaryColor),
+            ),
+            secondary: Icon(Icons.access_time, color: primaryColor),
           ),
           SwitchListTile.adaptive(
             value: broadcastAlerts,
             onChanged: (v) => setState(() => broadcastAlerts = v),
-            title: const Text('Broadcast Announcements'),
-            secondary: Icon(Icons.campaign, color: cs.secondary),
+            title: Text(
+              'Broadcast Announcements',
+              style: TextStyle(color: secondaryColor),
+            ),
+            secondary: Icon(Icons.campaign, color: primaryColor),
           ),
           _section('Support'),
           ListTile(
-            leading: Icon(Icons.contact_phone, color: cs.primary),
-            title: const Text('Driver Contact'),
-            subtitle: const Text('+91 98765 43210'),
+            leading: Icon(Icons.contact_phone, color: primaryColor),
+            title: Text(
+              'Driver Contact',
+              style: TextStyle(color: secondaryColor),
+            ),
+            subtitle: Text(
+              '+91 98765 43210',
+              style: TextStyle(color: secondaryColor),
+            ),
             trailing: IconButton(
-              icon: const Icon(Icons.call),
+              icon: Icon(Icons.call, color: primaryColor),
               onPressed: _callDriver,
             ),
           ),
           ListTile(
-            leading: Icon(Icons.help_outline, color: cs.primary),
-            title: const Text('Help & FAQs'),
+            leading: Icon(Icons.help_outline, color: primaryColor),
+            title: Text('Help & FAQs', style: TextStyle(color: secondaryColor)),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.info_outline, color: cs.primary),
-            title: const Text('About App'),
-            subtitle: const Text('Version 1.0.0'),
+            leading: Icon(Icons.info_outline, color: primaryColor),
+            title: Text('About App', style: TextStyle(color: secondaryColor)),
+            subtitle: Text(
+              'Version 1.0.0',
+              style: TextStyle(color: secondaryColor),
+            ),
             onTap: () {},
           ),
+          const SizedBox(height: 24),
         ],
       ),
     );
