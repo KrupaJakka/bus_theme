@@ -1,3 +1,5 @@
+import 'package:bus_theme/login_screens/parent_login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,12 +13,10 @@ class _ParentSettingsPageState extends State<ParentSettingsPage> {
   bool arrivalAlerts = true;
   bool delayAlerts = false;
   bool broadcastAlerts = true;
-  bool darkMode = true; 
+  bool darkMode = true;
   String language = 'English';
 
   final _languages = ['English', 'Hindi', 'Tamil', 'Kannada'];
-
-  // ---------- helpers ----------
   Widget _section(String title) => Padding(
     padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
     child: Text(
@@ -30,41 +30,27 @@ class _ParentSettingsPageState extends State<ParentSettingsPage> {
     if (await canLaunchUrl(Uri.parse(tel))) await launchUrl(Uri.parse(tel));
   }
 
-  void _confirmLogout() {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Log Out'),
-        content: const Text('Are you sure you want to log out?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () {
-              // TODO: inject auth provider & signOut
-              Navigator.pop(context);
-              Navigator.popUntil(
-                context,
-                ModalRoute.withName('/'),
-              ); // back to onboarding
-            },
-            child: const Text('Log Out'),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        title: const Text('Settings'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const ParentLogin()),
+              );
+            },
+          ),
+        ],
+      ),
       body: ListView(
         children: [
-          // ---------- Account ----------
           _section('Account'),
           ListTile(
             leading: const CircleAvatar(child: Icon(Icons.person)),
@@ -72,8 +58,6 @@ class _ParentSettingsPageState extends State<ParentSettingsPage> {
             subtitle: const Text('alex.parent@example.com'),
             trailing: TextButton(onPressed: () {}, child: const Text('Edit')),
           ),
-
-          // ---------- Preferences ----------
           _section('Preferences'),
           SwitchListTile.adaptive(
             value: darkMode,
@@ -103,8 +87,6 @@ class _ParentSettingsPageState extends State<ParentSettingsPage> {
               if (sel != null) setState(() => language = sel);
             },
           ),
-
-          // ---------- Notifications ----------
           _section('Notifications'),
           SwitchListTile.adaptive(
             value: arrivalAlerts,
@@ -124,8 +106,6 @@ class _ParentSettingsPageState extends State<ParentSettingsPage> {
             title: const Text('Broadcast Announcements'),
             secondary: Icon(Icons.campaign, color: cs.secondary),
           ),
-
-          // ---------- Support ----------
           _section('Support'),
           ListTile(
             leading: Icon(Icons.contact_phone, color: cs.primary),
@@ -146,15 +126,6 @@ class _ParentSettingsPageState extends State<ParentSettingsPage> {
             title: const Text('About App'),
             subtitle: const Text('Version 1.0.0'),
             onTap: () {},
-          ),
-
-          // ---------- Danger Zone ----------
-          _section('Danger Zone'),
-          ListTile(
-            tileColor: Colors.red.withOpacity(0.1),
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text('Log Out', style: TextStyle(color: Colors.red)),
-            onTap: _confirmLogout,
           ),
         ],
       ),

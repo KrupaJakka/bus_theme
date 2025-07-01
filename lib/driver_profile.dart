@@ -1,4 +1,6 @@
+import 'package:bus_theme/login_screens/driver_login.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -26,6 +28,18 @@ class DriverProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const DriverLogin()),
+              );
+            },
+          ),
+        ],
         title: const Text('Driver Profile'),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
@@ -141,4 +155,4 @@ class DriverProfileScreen extends StatelessWidget {
       ),
     );
   }
-} 
+}

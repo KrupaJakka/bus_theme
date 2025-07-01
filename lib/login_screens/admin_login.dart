@@ -1,5 +1,7 @@
+import 'package:bus_theme/Adminshell.dart';
 import 'package:bus_theme/drivershell.dart';
 import 'package:bus_theme/firebase_options.dart';
+import 'package:bus_theme/parent_shell.dart';
 import 'package:bus_theme/student_shell.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,9 +32,9 @@ class Sample extends StatelessWidget {
               body: Center(child: CircularProgressIndicator()),
             );
           } else if (snapshot.hasData) {
-            return const StudentShell();
+            return const AdminShell();
           } else {
-            return const StudentLogin();
+            return const AdminLogin();
           }
         },
       ),
@@ -40,14 +42,14 @@ class Sample extends StatelessWidget {
   }
 }
 
-class StudentLogin extends StatefulWidget {
-  const StudentLogin({super.key});
+class AdminLogin extends StatefulWidget {
+  const AdminLogin({super.key});
 
   @override
-  State<StudentLogin> createState() => _StudentLoginState();
+  State<AdminLogin> createState() => _AdminLoginState();
 }
 
-class _StudentLoginState extends State<StudentLogin> {
+class _AdminLoginState extends State<AdminLogin> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -73,7 +75,7 @@ class _StudentLoginState extends State<StudentLogin> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const StudentShell()),
+        MaterialPageRoute(builder: (context) => const AdminShell()),
       );
     } catch (e) {
       ScaffoldMessenger.of(

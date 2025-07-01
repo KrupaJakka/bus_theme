@@ -1,3 +1,4 @@
+import 'package:bus_theme/drivershell.dart';
 import 'package:bus_theme/firebase_options.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,9 +29,9 @@ class Sample extends StatelessWidget {
               body: Center(child: CircularProgressIndicator()),
             );
           } else if (snapshot.hasData) {
-            return const HomePage(); // Already logged in
+            return const DriverShell();
           } else {
-            return const DriverLogin(); // Not logged in
+            return const DriverLogin();
           }
         },
       ),
@@ -71,7 +72,7 @@ class _DriverLoginState extends State<DriverLogin> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const DriverShell()),
       );
     } catch (e) {
       ScaffoldMessenger.of(
@@ -165,38 +166,6 @@ class _DriverLoginState extends State<DriverLogin> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Home Page"),
-        backgroundColor: Colors.black,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const DriverLogin()),
-              );
-            },
-          ),
-        ],
-      ),
-      body: const Center(
-        child: Text(
-          "Welcome! You are logged in.",
-          style: TextStyle(fontSize: 20),
         ),
       ),
     );

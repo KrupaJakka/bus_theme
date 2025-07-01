@@ -1,4 +1,6 @@
+import 'package:bus_theme/login_screens/student_login.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -314,6 +316,18 @@ class _ProfilePageState extends State<ProfilePage> {
         title: const Text('Profile', style: TextStyle(color: Colors.black)),
         backgroundColor: primaryColor,
         iconTheme: const IconThemeData(color: Colors.black),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const StudentLogin()),
+              );
+            },
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(

@@ -1,8 +1,9 @@
+import 'package:bus_theme/login_screens/admin_login.dart';
+import 'package:bus_theme/login_screens/driver_login.dart';
+import 'package:bus_theme/login_screens/parent_login.dart';
+import 'package:bus_theme/login_screens/student_login.dart';
 import 'package:flutter/material.dart';
 import 'package:bus_theme/Adminshell.dart';
-import 'package:bus_theme/drivershell.dart';
-import 'package:bus_theme/parent_shell.dart';
-import 'package:bus_theme/student_shell.dart';
 
 void main() {
   runApp(const RoleSelectionApp());
@@ -40,25 +41,25 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
       case 'Driver':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const DriverShell()),
+          MaterialPageRoute(builder: (context) => const DriverLogin()),
         );
         break;
       case 'Parent':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ParentShell()),
+          MaterialPageRoute(builder: (context) => const ParentLogin()),
         );
         break;
       case 'Student':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const StudentShell()),
+          MaterialPageRoute(builder: (context) => const StudentLogin()),
         );
         break;
       case 'Admin':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const AdminShell()),
+          MaterialPageRoute(builder: (context) => const AdminLogin()),
         );
         break;
       default:

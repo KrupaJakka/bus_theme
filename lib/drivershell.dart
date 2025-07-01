@@ -1,6 +1,8 @@
 import 'package:bus_theme/driver_reports.dart';
+import 'package:bus_theme/login_screens/driver_login.dart';
 import 'package:bus_theme/trip_control_page.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class DriverShell extends StatefulWidget {
@@ -56,6 +58,18 @@ class DriverProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const DriverLogin()),
+              );
+            },
+          ),
+        ],
         title: const Text(
           'Driver Profile',
           style: TextStyle(fontWeight: FontWeight.bold),
