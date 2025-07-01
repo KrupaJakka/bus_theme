@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:bus_theme/firebase_options.dart';
 import 'package:bus_theme/student_shell.dart';
 import 'package:device_preview/device_preview.dart';
@@ -70,9 +71,12 @@ class _StudentLoginState extends State<StudentLogin> {
         context,
       ).showSnackBar(const SnackBar(content: Text("Login Successful")));
 
+      // Navigate to splash screen before StudentShell
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const StudentShell()),
+        MaterialPageRoute(
+          builder: (_) => const AnimatedSplashScreen(nextPage: StudentShell()),
+        ),
       );
     } catch (e) {
       ScaffoldMessenger.of(
@@ -166,6 +170,59 @@ class _StudentLoginState extends State<StudentLogin> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class AnimatedSplashScreen extends StatefulWidget {
+  final Widget nextPage;
+  const AnimatedSplashScreen({super.key, required this.nextPage});
+
+  @override
+  State<AnimatedSplashScreen> createState() => _AnimatedSplashScreenState();
+}
+
+class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(seconds: 3),
+      vsync: this,
+    );
+
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+
+    _controller.forward();
+
+    Timer(const Duration(seconds: 3), () {
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => widget.nextPage));
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFFECF4C),
+      body: Center(
+        child: FadeTransition(
+          opacity: _animation,
+          child: Lottie.asset('assets/bus122.json'),
         ),
       ),
     );
