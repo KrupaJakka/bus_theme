@@ -46,6 +46,9 @@ dependencies:
   device_preview:
   lottie: ^2.7.0
   image_picker:
+  firebase_auth:
+  firebase_core: 
+  cloud_firestore:
 
 
 dev_dependencies:
