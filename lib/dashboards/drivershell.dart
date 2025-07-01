@@ -1,6 +1,6 @@
-import 'package:bus_theme/driver_reports.dart';
+import 'package:bus_theme/dashboards/driver_reports.dart';
 import 'package:bus_theme/login_screens/driver_login.dart';
-import 'package:bus_theme/trip_control_page.dart';
+import 'package:bus_theme/dashboards/trip_control_page.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

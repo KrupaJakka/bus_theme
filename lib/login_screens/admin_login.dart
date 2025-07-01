@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:bus_theme/Adminshell.dart';
+import 'package:bus_theme/dashboards/Adminshell.dart';
 import 'package:bus_theme/firebase_options.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -1,9 +1,9 @@
-import 'package:bus_theme/Adminshell.dart';
+import 'package:bus_theme/dashboards/Adminshell.dart';
 import 'package:bus_theme/Onboardingscreen.dart';
-import 'package:bus_theme/drivershell.dart';
-import 'package:bus_theme/parent_shell.dart';
+import 'package:bus_theme/dashboards/drivershell.dart';
+import 'package:bus_theme/dashboards/parent_shell.dart';
 import 'package:bus_theme/role_selection.dart';
-import 'package:bus_theme/student_shell.dart';
+import 'package:bus_theme/dashboards/student_shell.dart';
 import 'package:flutter/material.dart';
 
 class Routes {
