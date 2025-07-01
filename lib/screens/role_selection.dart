@@ -3,7 +3,6 @@ import 'package:bus_theme/login_screens/driver_login.dart';
 import 'package:bus_theme/login_screens/parent_login.dart';
 import 'package:bus_theme/login_screens/student_login.dart';
 import 'package:flutter/material.dart';
-import 'package:bus_theme/dashboards/Adminshell.dart';
 
 void main() {
   runApp(const RoleSelectionApp());
