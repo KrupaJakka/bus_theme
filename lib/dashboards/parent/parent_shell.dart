@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:bus_theme/dashboards/alertpage.dart';
-import 'package:bus_theme/dashboards/parent_profile.dart';
-import 'package:bus_theme/dashboards/parent_track_page.dart';
+import 'package:bus_theme/dashboards/parent/alertpage.dart';
+import 'package:bus_theme/dashboards/parent/parent_profile.dart';
+import 'package:bus_theme/dashboards/parent/parent_track_page.dart';
 
 class ParentShell extends StatefulWidget {
   const ParentShell({super.key});

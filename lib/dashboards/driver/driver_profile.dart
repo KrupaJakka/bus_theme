@@ -48,7 +48,6 @@ class DriverProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Profile Picture and Name
             Column(
               children: const [
                 CircleAvatar(

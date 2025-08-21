@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bus_theme/dashboards/student_details.dart';
+import 'package:bus_theme/dashboards/admin/student_details.dart';
 
 class Admin extends StatelessWidget {
   const Admin({super.key});

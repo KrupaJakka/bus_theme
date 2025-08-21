@@ -1,4 +1,4 @@
-import 'package:bus_theme/dashboards/admin_dashboard.dart';
+import 'package:bus_theme/dashboards/admin/admin_dashboard.dart';
 import 'package:bus_theme/login_screens/admin_login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

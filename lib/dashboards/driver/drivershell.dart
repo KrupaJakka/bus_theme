@@ -1,60 +1,64 @@
-import 'package:bus_theme/dashboards/driver_reports.dart';
-import 'package:bus_theme/login_screens/driver_login.dart';
-import 'package:bus_theme/dashboards/trip_control_page.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
-class DriverShell extends StatefulWidget {
-  const DriverShell({super.key});
-  @override
-  State<DriverShell> createState() => _DriverShellState();
-}
+import '../../login_screens/driver_login.dart';
 
-class _DriverShellState extends State<DriverShell> {
-  int _index = 0;
-  final _pages = const [
-    TripControlPage(),
-    DriverReportPage(),
-    DriverProfileScreen(),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return Scaffold(
-      body: IndexedStack(index: _index, children: _pages),
-      bottomNavigationBar: CurvedNavigationBar(
-        index: _index,
-        backgroundColor: Colors.transparent, // Transparent behind the nav bar
-        color: Color(0xFFFECF4C), // Your Yellow Theme
-        buttonBackgroundColor: Color(
-          0xFFFECF4C,
-        ), // Same yellow for the active button
-        animationDuration: const Duration(milliseconds: 300),
-        items: const [
-          Icon(Icons.play_arrow, color: Colors.black),
-          Icon(Icons.report, color: Colors.black),
-          Icon(Icons.person, color: Colors.black),
-        ],
-        onTap: (i) => setState(() => _index = i),
-      ),
-    );
-  }
-}
-
-class DriverProfileScreen extends StatelessWidget {
+class DriverProfileScreen extends StatefulWidget {
   const DriverProfileScreen({super.key});
 
-  static const Color primaryColor = Color(0xFFFECF4C); // Yellow
+  @override
+  State<DriverProfileScreen> createState() => _DriverProfileScreenState();
+}
+
+class _DriverProfileScreenState extends State<DriverProfileScreen> {
+  static const Color primaryColor = Color(0xFFFECF4C);
   static const Color textColor = Colors.black;
   static const Color cardBgColor = Colors.white;
-  static const Color tileBgColor = Color(
-    0xFFF7F7F7,
-  ); // Light grey tile background
+  static const Color tileBgColor = Color(0xFFF7F7F7);
+
+  Map<String, dynamic>? driverData;
+  File? _imageFile;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDriverData();
+  }
+
+  Future<void> _fetchDriverData() async {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection("drivers")
+        .doc(uid)
+        .get();
+
+    setState(() {
+      driverData = doc.data() as Map<String, dynamic>?;
+    });
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+      // TODO: upload to Firebase Storage and save URL in Firestore
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (driverData == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
@@ -79,9 +83,7 @@ class DriverProfileScreen extends StatelessWidget {
         elevation: 2,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Example action like Edit Profile or Settings
-        },
+        onPressed: _pickImage,
         backgroundColor: primaryColor,
         child: const Icon(Icons.edit, color: Colors.black),
       ),
@@ -93,43 +95,33 @@ class DriverProfileScreen extends StatelessWidget {
           const SizedBox(height: 16),
 
           _buildSection('Personal Information', [
-            _buildTile('Full Name', 'Ravi Kumar'),
-            _buildTile('Contact Number', '+91 9876543210'),
-            _buildTile('Email Address', 'ravi.kumar@college.com'),
-            _buildTile('Address', '15/6 East Street, Hyderabad'),
+            _buildTile('Full Name', driverData!['name'] ?? 'N/A'),
+            _buildTile('Contact Number', driverData!['phone'] ?? 'N/A'),
+            _buildTile('Email Address', driverData!['email'] ?? 'N/A'),
+            _buildTile('Address', driverData!['address'] ?? 'N/A'),
           ]),
 
           _buildSection('Driver Credentials & Licensing', [
-            _buildTile('License No.', 'AP-123456789'),
-            _buildTile('Validity', '12/12/2028'),
-            _buildTile('Type', 'Commercial'),
-            _buildTile('Issuing Authority', 'RTO Hyderabad'),
+            _buildTile('License No.', driverData!['licenseNo'] ?? 'N/A'),
+            _buildTile('Validity', driverData!['licenseValidity'] ?? 'N/A'),
+            _buildTile('Type', driverData!['licenseType'] ?? 'N/A'),
+            _buildTile('Issuing Authority', driverData!['rto'] ?? 'N/A'),
           ]),
 
           _buildSection('Vehicle Details', [
-            _buildTile('Bus ID', 'BUS-21'),
-            _buildTile('Registration No.', 'AP09BN8726'),
-            _buildTile('Capacity', '45 Seats'),
-            _buildTile('Capacity Utilization', '80%'),
+            _buildTile('Bus ID', driverData!['busId'] ?? 'N/A'),
+            _buildTile('Registration No.', driverData!['regNo'] ?? 'N/A'),
+            _buildTile('Capacity', driverData!['capacity'] ?? 'N/A'),
+            _buildTile('Capacity Utilization',
+                driverData!['capacityUtilization'] ?? 'N/A'),
           ]),
 
           _buildSection('Experience & Qualifications', [
-            _buildTile('Years of Experience', '8'),
-            _buildTile('Past Records', 'Clean'),
-            _buildTile('Certifications', 'Defensive Driving, First Aid'),
-          ]),
-
-          _buildSection('Profile Security', [
-            _buildTile('Username', 'ravi_driver'),
-            _buildTile('Password', '**********'),
-            _buildTile('2FA Status', 'Enabled'),
-          ]),
-
-          _buildSection('Employment Details', [
-            _buildTile('Hiring Date', '01/04/2018'),
-            _buildTile('Department', 'Transportation'),
-            _buildTile('Shift', 'Morning: 6am - 2pm'),
-            _buildTile('Supervisor', 'Mr. Srinivas Rao'),
+            _buildTile('Years of Experience',
+                driverData!['experienceYears']?.toString() ?? 'N/A'),
+            _buildTile('Past Records', driverData!['pastRecords'] ?? 'N/A'),
+            _buildTile('Certifications',
+                driverData!['certifications'] ?? 'N/A'),
           ]),
         ],
       ),
@@ -145,25 +137,32 @@ class DriverProfileScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       child: Row(
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             radius: 35,
+            backgroundImage: _imageFile != null
+                ? FileImage(_imageFile!)
+                : (driverData!['photoUrl'] != null
+                    ? NetworkImage(driverData!['photoUrl'])
+                    : null) as ImageProvider?,
             backgroundColor: Colors.black,
-            child: Icon(Icons.person, size: 35, color: Colors.white),
+            child: driverData!['photoUrl'] == null && _imageFile == null
+                ? const Icon(Icons.person, size: 35, color: Colors.white)
+                : null,
           ),
           const SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Text(
-                'Ravi Kumar',
-                style: TextStyle(
+                driverData!['name'] ?? 'N/A',
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: textColor,
                 ),
               ),
-              SizedBox(height: 4),
-              Text(
+              const SizedBox(height: 4),
+              const Text(
                 'Professional Bus Driver',
                 style: TextStyle(fontSize: 14, color: textColor),
               ),
