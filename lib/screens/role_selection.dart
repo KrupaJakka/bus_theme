@@ -1,5 +1,5 @@
 import 'package:bus_theme/login_screens/admin_login.dart';
-import 'package:bus_theme/login_screens/driver_login.dart';
+import 'package:bus_theme/dashboards/driver/driver_login.dart';
 import 'package:bus_theme/login_screens/parent_login.dart';
 import 'package:bus_theme/login_screens/student_login.dart';
 import 'package:flutter/material.dart';

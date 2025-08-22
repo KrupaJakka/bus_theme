@@ -30,7 +30,7 @@ class Sample extends StatelessWidget {
               body: Center(child: CircularProgressIndicator()),
             );
           } else if (snapshot.hasData) {
-            return const DriverShell();
+            return const DriverProfileScreen();
           } else {
             return const DriverLogin();
           }
@@ -75,7 +75,8 @@ class _DriverLoginState extends State<DriverLogin> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => const AnimatedSplashScreen(nextPage: DriverShell()),
+          builder: (_) =>
+              const AnimatedSplashScreen(nextPage: DriverProfileScreen()),
         ),
       );
     } catch (e) {

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-import '../../login_screens/driver_login.dart';
+import 'driver_login.dart';
 
 class DriverProfileScreen extends StatefulWidget {
   const DriverProfileScreen({super.key});
@@ -41,8 +41,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
@@ -54,9 +55,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   @override
   Widget build(BuildContext context) {
     if (driverData == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
@@ -112,16 +111,22 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             _buildTile('Bus ID', driverData!['busId'] ?? 'N/A'),
             _buildTile('Registration No.', driverData!['regNo'] ?? 'N/A'),
             _buildTile('Capacity', driverData!['capacity'] ?? 'N/A'),
-            _buildTile('Capacity Utilization',
-                driverData!['capacityUtilization'] ?? 'N/A'),
+            _buildTile(
+              'Capacity Utilization',
+              driverData!['capacityUtilization'] ?? 'N/A',
+            ),
           ]),
 
           _buildSection('Experience & Qualifications', [
-            _buildTile('Years of Experience',
-                driverData!['experienceYears']?.toString() ?? 'N/A'),
+            _buildTile(
+              'Years of Experience',
+              driverData!['experienceYears']?.toString() ?? 'N/A',
+            ),
             _buildTile('Past Records', driverData!['pastRecords'] ?? 'N/A'),
-            _buildTile('Certifications',
-                driverData!['certifications'] ?? 'N/A'),
+            _buildTile(
+              'Certifications',
+              driverData!['certifications'] ?? 'N/A',
+            ),
           ]),
         ],
       ),
@@ -142,8 +147,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             backgroundImage: _imageFile != null
                 ? FileImage(_imageFile!)
                 : (driverData!['photoUrl'] != null
-                    ? NetworkImage(driverData!['photoUrl'])
-                    : null) as ImageProvider?,
+                          ? NetworkImage(driverData!['photoUrl'])
+                          : null)
+                      as ImageProvider?,
             backgroundColor: Colors.black,
             child: driverData!['photoUrl'] == null && _imageFile == null
                 ? const Icon(Icons.person, size: 35, color: Colors.white)
